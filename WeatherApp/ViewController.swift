@@ -16,6 +16,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
     @IBOutlet weak var minTemperature: UILabel!
     @IBOutlet weak var maxTemperature: UILabel!
     @IBOutlet weak var currentTemp: UILabel!
+    @IBOutlet weak var tableView: UITableView!
     
     var locatioManager = CLLocationManager()
     var currentLocation:CLLocation!
@@ -24,11 +25,14 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
     override func viewDidLoad() {
         super.viewDidLoad()
         setupLocation()
+        tableView.delegate = self
+        tableView.dataSource = self
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         getWeatherData()
+ 
     }
 
     func getWeatherData() {
@@ -41,6 +45,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
                 Location.sharedInstance.longitude = locatioManager.location?.coordinate.longitude
                 weatherApi.downloadCurrentWeather {
                     self.updateUI()
+                }
+                weatherApi.downloadWeatherFocust {
+                    
                 }
                 break
             case .notDetermined, .restricted, .denied:
@@ -67,7 +74,36 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
         maxTemperature.text = "\(maxWeatherInDegreesCelsius) °"
         weatherType.text = weatherApi.currentWeather.weatherType
     }
-    
-    
 }
+
+extension ViewController:UITableViewDataSource,UITableViewDelegate{
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 5
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ForecastCell") as! ForecastCell
+        cell.layer.backgroundColor = UIColor.clear.cgColor
+        cell.setupCell(day: "Saturday", icon: UIImage(named: "partlysunny")!, temperature: 29)
+        return cell
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
