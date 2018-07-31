@@ -16,7 +16,7 @@ class WeatherAPI {
     var currentWeather = CurrentWeather()
     
     func downloadCurrentWeather(completed: @escaping DownloadComplete){
-        let weatherRequestURL = URL(string: "\(openWeatherMapBaseURL)?lat=-26&lon=28&appid=\(openWeatherMapAPIKey)")
+        let weatherRequestURL = URL(string: "\(openWeatherMapBaseURL)?lat=\(Location.sharedInstance.latitude.roundOff(toPlaces: 2))&lon=\(Location.sharedInstance.longitude.roundOff(toPlaces: 2))&appid=\(openWeatherMapAPIKey)")
         Alamofire.request(weatherRequestURL!).responseJSON{(response) in
             print(response)
             let json = JSON(response.result.value!)

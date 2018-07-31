@@ -18,47 +18,43 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
     @IBOutlet weak var currentTemp: UILabel!
     
     var locatioManager = CLLocationManager()
+    var currentLocation:CLLocation!
     let weatherApi = WeatherAPI()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        weatherApi.downloadCurrentWeather {
-            self.updateUI()
-        }
+        setupLocation()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        getWeatherData()
+    }
+
+    func getWeatherData() {
+        if CLLocationManager.locationServicesEnabled() {
+            switch CLLocationManager.authorizationStatus(){
+            case .authorizedAlways, .authorizedWhenInUse:
+                print("Location Authorized!")
+                currentLocation = locatioManager.location
+                Location.sharedInstance.latitude = locatioManager.location?.coordinate.latitude
+                Location.sharedInstance.longitude = locatioManager.location?.coordinate.longitude
+                weatherApi.downloadCurrentWeather {
+                    self.updateUI()
+                }
+                break
+            case .notDetermined, .restricted, .denied:
+                print("Error: Location either not determined, restricted, or denied!...")
+                break
+            }
+        }
+    }
+    func setupLocation(){
         locatioManager.delegate = self
         locatioManager.requestWhenInUseAuthorization()
         locatioManager.desiredAccuracy = kCLLocationAccuracyBest
         locatioManager.startUpdatingLocation()
         locatioManager.startMonitoringSignificantLocationChanges()
-    }
-    
-    func getWeatherData() {
-        if CLLocationManager.locationServicesEnabled() {
-            switch CLLocationManager.authorizationStatus(){
-            case .authorizedAlways, .authorizedWhenInUse:
-                print("Authorized")
-                let lat = locatioManager.location?.coordinate.latitude
-                let long = locatioManager.location?.coordinate.longitude
-                let location = CLLocation(latitude: lat!, longitude: long!)
-                CLGeocoder().reverseGeocodeLocation(location) { (placemarks, error) in
-                    if error != nil{
-                        return
-                    }else if let country = placemarks?.first?.country, let city = placemarks?.first?.locality{
-                        print(country)
-                        print(city)
-                        //self.weatherApi.getWeather(city: city)
-                    }
-                }
-                break
-            case .notDetermined, .restricted, .denied:
-                print("Error...")
-                break
-            }
-        }
     }
     
     func updateUI(){
