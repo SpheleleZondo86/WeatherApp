@@ -18,7 +18,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="sea_cloudy" translatesAutoresizingMaskIntoConstraints="NO" id="gng-20-Rod">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gng-20-Rod">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="330"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES" flexibleMaxY="YES"/>
                             </imageView>
@@ -132,6 +132,7 @@
                     <connections>
                         <outlet property="currentTemp" destination="tEk-Q7-sFj" id="THR-2H-9uk"/>
                         <outlet property="currentTemperature" destination="cPb-x9-8lW" id="dAb-PP-2bO"/>
+                        <outlet property="image" destination="gng-20-Rod" id="jzb-CS-XfI"/>
                         <outlet property="maxTemperature" destination="250-j0-fMr" id="qkw-8w-QIL"/>
                         <outlet property="minTemperature" destination="0Mq-ms-bqO" id="RZZ-1L-cE7"/>
                         <outlet property="tableView" destination="t6L-Ak-8Ba" id="KAW-Hq-hP7"/>
@@ -143,7 +144,4 @@
             <point key="canvasLocation" x="-75.362318840579718" y="-107.60869565217392"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="sea_cloudy" width="360" height="320"/>
-    </resources>
 </document>

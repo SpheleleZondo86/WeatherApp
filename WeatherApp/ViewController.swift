@@ -17,10 +17,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
     @IBOutlet weak var maxTemperature: UILabel!
     @IBOutlet weak var currentTemp: UILabel!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var image: UIImageView!
     
     var locatioManager = CLLocationManager()
     var currentLocation:CLLocation!
-    let weatherApi = WeatherAPI()
+    let weatherApi = WeatherAPI.shared
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,11 +44,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
                 currentLocation = locatioManager.location
                 Location.sharedInstance.latitude = locatioManager.location?.coordinate.latitude
                 Location.sharedInstance.longitude = locatioManager.location?.coordinate.longitude
+                let spinner = UIViewController.displaySpinner(onView: self.view)
                 weatherApi.downloadCurrentWeather {
                     self.updateUI()
-                }
-                weatherApi.downloadWeatherFocust {
-                    
+                    UIViewController.removeSpinner(spinner: spinner)
                 }
                 break
             case .notDetermined, .restricted, .denied:
@@ -73,6 +73,17 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
         minTemperature.text = "\(minWeatherInDegreesCelsius) °"
         maxTemperature.text = "\(maxWeatherInDegreesCelsius) °"
         weatherType.text = weatherApi.currentWeather.weatherType
+        switch weatherType.text {
+        case "Clear":
+            self.view.backgroundColor = UIColor(hexString: "#47AB2F")
+            self.image.image = UIImage(named: "forest_sunny")
+        case "Cloudy":
+            self.view.backgroundColor = UIColor(hexString: "#54717A")
+            self.image.image = UIImage(named: "forest_cloudy")
+        default:
+            self.view.backgroundColor = UIColor(hexString: "#57575D")
+            self.image.image = UIImage(named: "forest_rainy")
+        }
     }
 }
 

@@ -11,6 +11,12 @@ import Alamofire
 import SwiftyJSON
 
 class WeatherAPI {
+    
+    static let shared = WeatherAPI()
+    private init(){
+        
+    }
+    
     let openWeatherMapBaseURL = "http://api.openweathermap.org/data/2.5/"
     let openWeatherMapAPIKey = "e5e2c1d0b67002fc6d5c442b8df987bf"
     var currentWeather = CurrentWeather()
