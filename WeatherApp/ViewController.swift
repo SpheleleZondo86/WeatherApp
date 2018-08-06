@@ -22,21 +22,32 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
     var locatioManager = CLLocationManager()
     var currentLocation:CLLocation!
     let weatherApi = WeatherAPI.shared
+    var spinner:UIView? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupLocation()
         tableView.delegate = self
         tableView.dataSource = self
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        getWeatherData()
- 
+        setupLocation()
+        spinner = UIViewController.displaySpinner(onView: self.view)
+        weatherApi.downloadCurrentWeather {
+            self.updateUI()
+        }
+        weatherApi.downloadWeatherFocust{
+            self.tableView.reloadData()
+        }
     }
 
-    func getWeatherData() {
+    func setupLocation(){
+        locatioManager.delegate = self
+        locatioManager.requestWhenInUseAuthorization()
+        locatioManager.desiredAccuracy = kCLLocationAccuracyBest
+        locatioManager.startUpdatingLocation()
+        locatioManager.startMonitoringSignificantLocationChanges()
         if CLLocationManager.locationServicesEnabled() {
             switch CLLocationManager.authorizationStatus(){
             case .authorizedAlways, .authorizedWhenInUse:
@@ -44,24 +55,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
                 currentLocation = locatioManager.location
                 Location.sharedInstance.latitude = locatioManager.location?.coordinate.latitude
                 Location.sharedInstance.longitude = locatioManager.location?.coordinate.longitude
-                let spinner = UIViewController.displaySpinner(onView: self.view)
-                weatherApi.downloadCurrentWeather {
-                    self.updateUI()
-                    UIViewController.removeSpinner(spinner: spinner)
-                }
                 break
             case .notDetermined, .restricted, .denied:
                 print("Error: Location either not determined, restricted, or denied!...")
                 break
             }
         }
-    }
-    func setupLocation(){
-        locatioManager.delegate = self
-        locatioManager.requestWhenInUseAuthorization()
-        locatioManager.desiredAccuracy = kCLLocationAccuracyBest
-        locatioManager.startUpdatingLocation()
-        locatioManager.startMonitoringSignificantLocationChanges()
     }
     
     func updateUI(){
@@ -77,13 +76,20 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
         case "Clear":
             self.view.backgroundColor = UIColor(hexString: "#47AB2F")
             self.image.image = UIImage(named: "forest_sunny")
+        case "Sunny":
+            self.view.backgroundColor = UIColor(hexString: "#47AB2F")
+            self.image.image = UIImage(named: "forest_sunny")
         case "Cloudy":
+            self.view.backgroundColor = UIColor(hexString: "#54717A")
+            self.image.image = UIImage(named: "forest_cloudy")
+        case "Clouds":
             self.view.backgroundColor = UIColor(hexString: "#54717A")
             self.image.image = UIImage(named: "forest_cloudy")
         default:
             self.view.backgroundColor = UIColor(hexString: "#57575D")
             self.image.image = UIImage(named: "forest_rainy")
         }
+        UIViewController.removeSpinner(spinner: self.spinner!)
     }
 }
 
@@ -93,13 +99,13 @@ extension ViewController:UITableViewDataSource,UITableViewDelegate{
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return self.weatherApi.focustArray.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ForecastCell") as! ForecastCell
         cell.layer.backgroundColor = UIColor.clear.cgColor
-        cell.setupCell(day: "Saturday", icon: UIImage(named: "partlysunny")!, temperature: 29)
+        cell.setupCell(forecast: self.weatherApi.focustArray[indexPath.row])
         return cell
     }
 }

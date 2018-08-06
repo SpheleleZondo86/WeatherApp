@@ -19,7 +19,7 @@ extension Double{
 extension UIViewController{
     class func displaySpinner(onView:UIView)->UIView{
         let spinnerView = UIView.init(frame:onView.bounds)
-        spinnerView.backgroundColor = UIColor.init(red:0.5,green:0.5,blue:0.5,alpha:0.5)
+        spinnerView.backgroundColor = UIColor.init(red:0.5,green:0.5,blue:0.5,alpha:0.9)
         let activityIndicator = UIActivityIndicatorView.init(activityIndicatorStyle:.whiteLarge)
         activityIndicator.startAnimating()
         activityIndicator.center = spinnerView.center
@@ -56,5 +56,13 @@ extension UIColor {
             (a, r, g, b) = (255, 0, 0, 0)
         }
         self.init(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: CGFloat(a) / 255)
+    }
+}
+
+extension Date{
+    func dayOfWeek()->String{
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EEEE"
+        return dateFormatter.string(from: self)
     }
 }

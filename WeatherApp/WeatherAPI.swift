@@ -17,11 +17,10 @@ class WeatherAPI {
         
     }
     
-    let openWeatherMapBaseURL = "http://api.openweathermap.org/data/2.5/"
-    let openWeatherMapAPIKey = "e5e2c1d0b67002fc6d5c442b8df987bf"
     var currentWeather = CurrentWeather()
     var weatherForecast:ForecastWeather!
     var focustArray = [ForecastWeather]()
+    var locationKey = ""
     
     func downloadCurrentWeather(completed: @escaping DownloadComplete){
         let weatherRequestURL = URL(string: "\(openWeatherMapBaseURL)weather?lat=\(Location.sharedInstance.latitude.roundOff(toPlaces: 2))&lon=\(Location.sharedInstance.longitude.roundOff(toPlaces: 2))&appid=\(openWeatherMapAPIKey)")
@@ -36,21 +35,28 @@ class WeatherAPI {
         }
     }
     
-    func downloadWeatherFocust(completed: @escaping DownloadComplete){
-        let weatherRequestURL = URL(string: "\(openWeatherMapBaseURL)forecast?lat=\(Location.sharedInstance.latitude.roundOff(toPlaces: 2))&lon=\(Location.sharedInstance.longitude.roundOff(toPlaces: 2))&appid=\(openWeatherMapAPIKey)")
-        Alamofire.request(weatherRequestURL!).responseJSON{(response) in
-            print(response)
-            let result = response.result
-            if let dictinary = result.value as? Dictionary<String,AnyObject>{
-                if let list = dictinary["list"] as? [Dictionary<String,AnyObject>]{
-                    for item in list{
-                        self.weatherForecast = ForecastWeather(forecastDictinery: item)
-                        self.focustArray.append(self.weatherForecast)
-                    }
-                }
-            }
-            
+    func downloadLocationKey(completed: @escaping DownloadComplete){
+        let query = "\(Location.sharedInstance.latitude.roundOff(toPlaces: 2)),\(Location.sharedInstance.longitude.roundOff(toPlaces: 2))"
+        let weatherRequestURL = URL(string: "\(acuWeatherBaseURL)locations/v1/cities/geoposition/search?apikey=\(acuWeatherAPIKey)&q=\(query.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "")")
+        Alamofire.request(weatherRequestURL!).responseJSON{ (response) in
+            let json = JSON(response.result.value!)
+            self.locationKey = json["Key"].rawString()!
             completed()
+        }
+    }
+    
+    func downloadWeatherFocust(completed: @escaping DownloadComplete){
+        downloadLocationKey {
+            let weatherRequestURL = URL(string: "\(acuWeatherBaseURL)forecasts/v1/daily/5day/\(self.locationKey)?apikey=\(acuWeatherAPIKey)")
+            Alamofire.request(weatherRequestURL!).responseJSON{ (response) in
+                let json = JSON(response.result.value!)
+                let dailyForecasts = json["DailyForecasts"].arrayObject as? [Dictionary<String,AnyObject>]
+                for item in dailyForecasts!{
+                    self.weatherForecast = ForecastWeather(item: item)
+                    self.focustArray.append(self.weatherForecast)
+                }
+                completed()
+            }
         }
     }
 }
