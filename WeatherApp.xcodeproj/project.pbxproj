@@ -92,19 +92,14 @@
 		AE7E801F21017EB6002A2D50 /* WeatherApp */ = {
 			isa = PBXGroup;
 			children = (
-				AE8EFB48210F565500EE40C6 /* Extras */,
-				AE7E802021017EB6002A2D50 /* AppDelegate.swift */,
-				AE7E802221017EB6002A2D50 /* ViewController.swift */,
-				AE7E802421017EB6002A2D50 /* Main.storyboard */,
-				AE7E802721017EB6002A2D50 /* Assets.xcassets */,
-				AE7E802921017EB6002A2D50 /* LaunchScreen.storyboard */,
 				AE7E802C21017EB6002A2D50 /* Info.plist */,
-				AE0AC6292106ABA000944C8C /* WeatherAPI.swift */,
-				AE8EFB46210F41B700EE40C6 /* CurrentWeather.swift */,
-				AE8EFB4B210F5F4B00EE40C6 /* Extensions.swift */,
-				AEE8C4C121108B7C009CBC79 /* Location.swift */,
-				AEE8C4C52110A080009CBC79 /* ForecastCell.swift */,
-				AEE8C4C72110B0D1009CBC79 /* ForecastWeather.swift */,
+				AEBF923721197D7C00E142A1 /* API */,
+				AEBF923621197D7000E142A1 /* Extensions */,
+				AEBF923521197D1800E142A1 /* Controller */,
+				AEBF923421197D0C00E142A1 /* View */,
+				AEBF923321197CEC00E142A1 /* Model */,
+				AE8EFB48210F565500EE40C6 /* Extras */,
+				AEBF923821197DF600E142A1 /* Supporting Files */,
 			);
 			path = WeatherApp;
 			sourceTree = "<group>";
@@ -115,6 +110,59 @@
 				AE8EFB49210F566800EE40C6 /* Extras.swift */,
 			);
 			path = Extras;
+			sourceTree = "<group>";
+		};
+		AEBF923321197CEC00E142A1 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				AE8EFB46210F41B700EE40C6 /* CurrentWeather.swift */,
+				AEE8C4C121108B7C009CBC79 /* Location.swift */,
+				AEE8C4C72110B0D1009CBC79 /* ForecastWeather.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		AEBF923421197D0C00E142A1 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				AEE8C4C52110A080009CBC79 /* ForecastCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		AEBF923521197D1800E142A1 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				AE7E802221017EB6002A2D50 /* ViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		AEBF923621197D7000E142A1 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				AE8EFB4B210F5F4B00EE40C6 /* Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		AEBF923721197D7C00E142A1 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				AE0AC6292106ABA000944C8C /* WeatherAPI.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		AEBF923821197DF600E142A1 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				AE7E802021017EB6002A2D50 /* AppDelegate.swift */,
+				AE7E802421017EB6002A2D50 /* Main.storyboard */,
+				AE7E802721017EB6002A2D50 /* Assets.xcassets */,
+				AE7E802921017EB6002A2D50 /* LaunchScreen.storyboard */,
+			);
+			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

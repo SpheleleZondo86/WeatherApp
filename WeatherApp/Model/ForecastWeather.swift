@@ -57,18 +57,12 @@ class ForecastWeather {
             self._date = formattedDate?.dayOfWeek() 
         }
         
-        if let temperature = item["Temperature"] as? Dictionary<String,AnyObject>{
-            if let max = temperature["Maximum"] as? Dictionary<String,AnyObject>{
-                if let rawValue = max["Value"] as? Double{
-                    self._temperature = ((rawValue - 32)/1.8).roundOff(toPlaces: 0)
-                }
-            }
+        if let temperature = item["Temperature"] as? Dictionary<String,AnyObject>, let max = temperature["Maximum"] as? Dictionary<String,AnyObject>, let rawValue = max["Value"] as? Double{
+            self._temperature = ((rawValue - 32)/1.8).roundOff(toPlaces: 0)
         }
         
-        if let day = item["Day"] as? Dictionary<String,AnyObject>{
-            if let description = day["IconPhrase"] as? String{
-                self._weatherDescription = description
-            }
+        if let day = item["Day"] as? Dictionary<String,AnyObject>, let description = day["IconPhrase"] as? String{
+            self._weatherDescription = description
         }
     }
 }

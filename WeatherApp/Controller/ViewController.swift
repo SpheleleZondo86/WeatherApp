@@ -26,35 +26,36 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.delegate = self
-        tableView.dataSource = self
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        setupLocation()
-        spinner = UIViewController.displaySpinner(onView: self.view)
-        weatherApi.downloadCurrentWeather {
+        self.setupLocation()
+        self.spinner = UIViewController.displaySpinner(onView: self.view)
+        self.weatherApi.downloadCurrentWeather {
+            self.weatherApi.downloadWeatherFocust{
+                self.tableView.reloadData()
+            }
             self.updateUI()
         }
-        weatherApi.downloadWeatherFocust{
-            self.tableView.reloadData()
-        }
+
     }
 
     func setupLocation(){
-        locatioManager.delegate = self
-        locatioManager.requestWhenInUseAuthorization()
-        locatioManager.desiredAccuracy = kCLLocationAccuracyBest
-        locatioManager.startUpdatingLocation()
-        locatioManager.startMonitoringSignificantLocationChanges()
+        self.locatioManager.delegate = self
+        self.locatioManager.requestWhenInUseAuthorization()
+        self.locatioManager.desiredAccuracy = kCLLocationAccuracyBest
+        self.locatioManager.startUpdatingLocation()
+        self.locatioManager.startMonitoringSignificantLocationChanges()
         if CLLocationManager.locationServicesEnabled() {
             switch CLLocationManager.authorizationStatus(){
             case .authorizedAlways, .authorizedWhenInUse:
                 print("Location Authorized!")
-                currentLocation = locatioManager.location
-                Location.sharedInstance.latitude = locatioManager.location?.coordinate.latitude
-                Location.sharedInstance.longitude = locatioManager.location?.coordinate.longitude
+                self.currentLocation = self.locatioManager.location
+                Location.sharedInstance.latitude = self.locatioManager.location?.coordinate.latitude
+                Location.sharedInstance.longitude = self.locatioManager.location?.coordinate.longitude
                 break
             case .notDetermined, .restricted, .denied:
                 print("Error: Location either not determined, restricted, or denied!...")
@@ -64,15 +65,15 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
     }
     
     func updateUI(){
-        let weatherInDegreesCelsius = Int(weatherApi.currentWeather.currentTemperature - 274.15)
-        let minWeatherInDegreesCelsius = Int(weatherApi.currentWeather.minTemperature - 274.15)
-        let maxWeatherInDegreesCelsius = Int(weatherApi.currentWeather.maxTemperature - 274.15)
-        currentTemperature.text = "\(weatherInDegreesCelsius) °"
-        currentTemp.text = "\(weatherInDegreesCelsius) °"
-        minTemperature.text = "\(minWeatherInDegreesCelsius) °"
-        maxTemperature.text = "\(maxWeatherInDegreesCelsius) °"
-        weatherType.text = weatherApi.currentWeather.weatherType
-        switch weatherType.text {
+        let weatherInDegreesCelsius = Int(self.weatherApi.currentWeather.currentTemperature - 274.15)
+        let minWeatherInDegreesCelsius = Int(self.weatherApi.currentWeather.minTemperature - 274.15)
+        let maxWeatherInDegreesCelsius = Int(self.weatherApi.currentWeather.maxTemperature - 274.15)
+        self.currentTemperature.text = "\(weatherInDegreesCelsius) °"
+        self.currentTemp.text = "\(weatherInDegreesCelsius) °"
+        self.minTemperature.text = "\(minWeatherInDegreesCelsius) °"
+        self.maxTemperature.text = "\(maxWeatherInDegreesCelsius) °"
+        self.weatherType.text = self.weatherApi.currentWeather.weatherType
+        switch self.weatherType.text {
         case "Clear":
             self.view.backgroundColor = UIColor(hexString: "#47AB2F")
             self.image.image = UIImage(named: "forest_sunny")
