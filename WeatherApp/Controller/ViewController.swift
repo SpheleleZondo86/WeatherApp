@@ -35,12 +35,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
         self.setupLocation()
         self.spinner = UIViewController.displaySpinner(onView: self.view)
         self.weatherApi.downloadCurrentWeather {
-            self.weatherApi.downloadWeatherFocust{
-                self.tableView.reloadData()
-            }
             self.updateUI()
         }
-
+        self.weatherApi.downloadWeatherFocust{
+            self.tableView.reloadData()
+            UIViewController.removeSpinner(spinner: self.spinner!)
+        }
     }
 
     func setupLocation(){
@@ -59,6 +59,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
                 break
             case .notDetermined, .restricted, .denied:
                 print("Error: Location either not determined, restricted, or denied!...")
+                assertionFailure("Enable Location!")
                 break
             }
         }
@@ -90,7 +91,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate{
             self.view.backgroundColor = UIColor(hexString: "#57575D")
             self.image.image = UIImage(named: "forest_rainy")
         }
-        UIViewController.removeSpinner(spinner: self.spinner!)
     }
 }
 
